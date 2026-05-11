@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:16
+    container_name: projekt2_db
+    environment:
+      POSTGRES_DB: appdb
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: apppassword
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: projekt2_mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
+  ntfy:
+    image: binwiederhier/ntfy
+    container_name: projekt2_ntfy
+    command: serve
+    ports:
+      - "8088:80"
+
+  prometheus:
+    image: prom/prometheus
+    container_name: projekt2_prometheus
+    volumes:
+      - ./.config/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+volumes:
+  pgdata:
